@@ -1,168 +1,374 @@
 syntax on
 
+call plug#begin('~/.vim/plugged')
+"---------- PLUGIN STARTS ----------
+""---- colorscheme
+Plug 'morhetz/gruvbox'
+Plug 'shinchu/lightline-gruvbox.vim'
+""---- statusline
+Plug 'itchyny/lightline.vim' " Lightweight status line than airline
+Plug 'taohexxx/lightline-buffer'
+""---- File finder
+Plug 'Yggdroot/LeaderF', { 'do': '.\install.bat' }
+""---- Aynsc task
+Plug 'skywind3000/asyncrun.vim'
+""---- NERDTree
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
+""---- Git wrapper and tools
+Plug 'tpope/vim-fugitive'
+Plug 'mhinz/vim-signify' " Faster than vim-gitgutter
+""---- tag generator
+Plug 'ludovicchabant/vim-gutentags' " Async auto-tagger
+Plug 'skywind3000/gutentags_plus' " Gscope Finder
+Plug 'skywind3000/vim-preview' " Gscope previewer
+""---- code snippets
+Plug 'honza/vim-snippets'
+Plug 'SirVer/ultisnips'
+""---- linting tool
+Plug 'w0rp/ale'
+""---- Auto completion
+Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
+Plug 'valloric/youcompleteme'
+Plug 'Raimondi/delimitMate' " automatic closing of brackets, etc.
+""---- autoformat tool
+" TODO: C formatprogram is not provided: clang-format
+Plug 'Chiel92/vim-autoformat'
+""---- Split screen drawer
+Plug 'justinmk/vim-dirvish'
+Plug 'kristijanhusak/vim-dirvish-git'
+""---- Vim-tmux navigation
+Plug 'christoomey/vim-tmux-navigator'
+""---- Misc
+Plug 'Shougo/echodoc.vim' " Quick function reference
+Plug 'easymotion/vim-easymotion' " Quick keyboard motion
+Plug 'vim-scripts/VisIncr' "Create incr/decr index entries
+"---------- PLUGIN ENDS ----------
+call plug#end()
+
 "---------- GENERAL VIM SETTINGS ----------
 set nocompatible
-set noshowmode
-set showcmd
-set number
+set notitle
 set ruler
-set title
-set showtabline=2 " always show tabline
-set scrolloff=5
-set history=50
+set number
+set hidden
+set hlsearch
+set incsearch
 set autoread
 set wildmenu
 set noerrorbells
 set novisualbell
-set hlsearch
-set incsearch
 set smartcase
-set backspace=indent,eol,start " 2 to make BS work like most other apps
 set mouse=a
 set ttymouse=xterm2
+set backspace=2
+set laststatus=2 " Always display lightline
+set noshowmode " Do not show vim mode for status line
 set fileformats=unix,dos,mac
 set fileencodings=utf-8,big5
 set termencoding=utf-8
 set encoding=utf-8
+scriptencoding utf-8
 
+if exists('$TMUX')
+  set term=screen-256color
+endif
+
+if has('gui_running')
+	set guioptions-=e
+endif
 
 "---------- TAB AND INDENTATION SETTINGS ----------
+set showtabline=2 " always show tabline
 set list listchars=tab:▶_
-set noexpandtab
-set tabstop=8
-set shiftwidth=4 " 4 for general purpose, 8 for Linux
-set softtabstop=4 " 4 for general purpose, 8 for Linux
+set autoindent
 set smartindent
-" set cindent
+set noexpandtab
+set tabstop=4
+"set cindent
+"set shiftwidth=4 " [cindent] 4 for general purpose, 8 for Linux
 
+"---------- FONT SETTINGS ----------
+"set gfn=Meslo\ LG\ M\ for\ Powerline\ 12 " GUI font
+set gfn=Menlo\ for\ Powerline\ 13 " GUI font
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-
-"---------- PLUGIN STARTS ----------
-call vundle#begin()
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-
-"" STATUS BAR
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-"Plugin 'itchyny/lightline.vim'
-
-"" UTILITIES
-Plugin 'airblade/vim-gitgutter'
-Plugin 'scrooloose/syntastic'
-Plugin 'Raimondi/delimitMate' " automatic closing of brackets, etc.
-Plugin 'scrooloose/nerdtree'
-Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'easymotion/vim-easymotion'
-Plugin 'tpope/vim-fugitive' " Git management
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-Plugin 'simplyzhao/cscope_maps.vim.git'
-Plugin 'vim-scripts/taglist.vim.git'
-Plugin 'vim-scripts/AutoComplPop'
-Plugin 'majutsushi/tagbar' " alternative of taglist
-"Plugin 'christoomey/vim-tmux-navigator'
-
-"" COLORSCHEMES
-Plugin 'flazz/vim-colorschemes'
-
-"" MISC
-Plugin 'wesleyche/SrcExpl.git'
-"Plugin 'wesleyche/Trinity'
-"Plugin 'vivien/vim-linux-coding-style.git'
-
-call vundle#end()
-"---------- PLUGIN ENDS ----------
-filetype indent plugin on
-
-"---------- CSCOPE AND CTAG SETTINGS ----------
-set cscopetagorder=1
-nmap <F12> :!cscope -Rbq<CR>:!ctags -R *<CR>
-"---------- AIRLINE AND COLORSCHEME SETTINGS ----------
-set laststatus=2 " status line
-let g:airline_powerline_fonts = 1
-let g:airline_detect_paste = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme = 'solarized'
-"let g:solarized_termcolors=256
-let g:solarized_termtrans = 1
+"---------- COLORSCHEME SETTINGS - GRUVBOX ----------
+let g:gruvbox_contrast_dark = 'medium'
 set background=dark
-set gfn=Meslo\ LG\ M\ for\ Powerline\ 12
+colorscheme gruvbox
 
-"if has('gui_running')
+"---------- GENERAL KEY MAPPING ----------
+"Workaround for xfce4-terminal to map Alt
+let c='a'
+while c <= 'z'
+  exec "set <A-".c.">=\e".c
+  exec "imap \e".c." <A-".c.">"
+  let c = nr2char(1+char2nr(c))
+endw
+set timeout ttimeoutlen=50
 
-"  set t_Co=256
-"  set background=light
-"else
-"  set t_Co=256
-"  set background=dark
+let mapleader=" " " Remap <Leader> key to space bar
 
-"endif
+" Mappings to access buffers (don't use "\p" because a
+" delay before pressing "p" would accidentally paste).
+" <Leader> + l     : list all buffers and jump to the specified buffer
+" <Leader> + b/f/e : go back/forward/last-used
+" <Leader> + 1~9   : go to buffer 1/2/3 etc
+" <Leader> + q     : close current buffer
+nnoremap <silent> <Leader>l :ls<CR>:b<space>
+nnoremap <silent> <Leader>b :bp<CR>
+nnoremap <silent> <Leader>f :bn<CR>
+nnoremap <silent> <Leader>q :bd<CR>
+nnoremap <silent> <Leader>e :e#<CR>
+nnoremap <silent> <Leader>1 :1b<CR>
+nnoremap <silent> <Leader>2 :2b<CR>
+nnoremap <silent> <Leader>3 :3b<CR>
+nnoremap <silent> <Leader>4 :4b<CR>
+nnoremap <silent> <Leader>5 :5b<CR>
+nnoremap <silent> <Leader>6 :6b<CR>
+nnoremap <silent> <Leader>7 :7b<CR>
+nnoremap <silent> <Leader>8 :8b<CR>
+nnoremap <silent> <Leader>9 :9b<CR>
 
-colorscheme solarized
+" Some keys are intercepted by terminal, preserved by vim or not suggested
+" Alt + hjkl for split window nav
+noremap <silent> <M-h>     :wincmd h<CR>
+noremap <silent> <M-j>     :wincmd j<CR>
+noremap <silent> <M-k>     :wincmd k<CR>
+noremap <silent> <M-l>     :wincmd l<CR>
+noremap <silent> <M-left>  :wincmd h<CR>
+noremap <silent> <M-down>  :wincmd j<CR>
+noremap <silent> <M-up>    :wincmd k<CR>
+noremap <silent> <M-right> :wincmd l<CR>
 
+" PageUp/PageDown
+"noremap <C-k> <PageUp>
+"noremap <C-j> <PageDown>
+"noremap <C-h> 0
+"noremap <C-l> $
 
-" Override Highlight Trailing spaces
-highlight ExtraWhitespace ctermbg=darkblue guibg=darkblue ctermfg=white
-call matchadd('ExtraWhitespace', '\s\+$')
+" Select all
+nnoremap <Leader>a ggVG<CR>
+" Select current word
+nmap * *<C-o>
+" Make n/N search works
+nmap n :norm! nzzzv<CR>
+nmap N :norm! Nzzzv<CR>
+" Unselect highlight areas
+nnoremap <silent> <Leader>/ :nohl<CR>
+" :h opens help in right split window
+cabbrev h vert bo h
 
-"---------- LIGHTLINE SETTINGS ----------
-"let g:lightline = {
-"  \ 'colorscheme': 'seoul256',
-"  \ 'component': {
-"  \   'readonly': '%{&readonly?"x":""}',
-"  \ },
-"  \ 'separator': { 'left': '', 'right': '' },
-"  \ 'subseparator': { 'left': '|', 'right': '|' }
-"  \ }
+"---------- VIM-FUGITIVE SETTINGS -----------
+"" \ keymaps
+map <silent> <Leader>g :Gblame<CR>
 
-"-------- SYNTASTIC SETTINGS---------
-let g:syntastic_error_symbol = '✘'
-let g:syntastic_warning_symbol = "▲"
-let g:syntastic_c_compiler ='gcc'
-let g:syntastic_c_include_dirs = ['inc', 'includes', 'headers']
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_mode_map = { 'mode': 'passive' }
+"---------- VIM-SIGNIFY SETTINGS -----------
+"" \ keymaps
+map <silent> <Leader>d :SignifyDiff!<CR>
+"" ]c [c : prev/next diff
+"" "]C [C: first/last diff
 
-nmap <F9> :SyntasticToggleMode<CR>
-nmap <Leader><F9> :SyntasticCheck<CR>
+"---------- EASYMOTION SETTINGS -----------
+"" <Leader><Leader>+hjkl keymaps
+map <Leader><Leader>h <Plug>(easymotion-b)
+map <Leader><Leader>j <Plug>(easymotion-j)
+map <Leader><Leader>k <Plug>(easymotion-k)
+map <Leader><Leader>l <Plug>(easymotion-w)
 
-"augroup mySyntastic
-""    au!
-"    au FileType tex let b:syntastic_mode = "passive"
-"augroup END
+"---------- NERDTEE SETTINGS ----------
+map <F2> :NERDTreeToggle<CR>
 
-"---------- NERDTREE SETTINGS ----------
-nnoremap <silent> <F3> :NERDTreeToggle<CR>
-let g:nerdtree_tabs_open_on_console_startup=0
-let g:nerdtree_tabs_open_on_gui_startup=0
-let g:NERDTreeWinPos = "left"
+"---------- LEADERF SETTINGS ----------
+"" ALT + qwert keymap sets
+let g:Lf_ShortcutF = '<M-q>' " Search file
+let g:Lf_ShortcutB = '<M-w>' " Search buffer
+" Function search
+noremap <M-e> :LeaderfFunction<CR>
+" Most recently used
+noremap <M-r> :LeaderfMru<CR>
+" Fuzzy ctag search
+noremap <M-t> :LeaderfTag<CR>
 
-"---------- TAGLIST KEY BINDING ----------
-nnoremap <silent> <Leader><F2> :Tlist<CR>
-let g:Tlist_Use_Right_Window=1
+let g:Lf_StlSeparator = { 'left': '', 'right': '', 'font': '' }
+let g:Lf_RootMarkers = ['.project', '.root', '.svn', '.git']
+let g:Lf_WorkingDirectoryMode = 'Ac'
+let g:Lf_WindowHeight = 0.30
+let g:Lf_CacheDirectory = expand('~/.vim/cache')
+let g:Lf_ShowRelativePath = 0
+let g:Lf_HideHelp = 1
+let g:Lf_StlColorscheme = 'powerline'
+let g:Lf_PreviewResult = {'Function':0, 'BufTag':0}
 
-"---------- TAGBAR KEY BINDING ----------
-nnoremap <silent> <F2> :TagbarToggle<CR>
-let g:tagbar_sort = 0
-"let g:tagbar_autoclose=2
-""autocmd BufEnter * nested :call tagbar#autoopen(0)
+"---------- ASYNCRUN SETTINGS ----------
+"" F* + \ keymaps
+"Toggle quickfix window
+nnoremap <silent> <F8> :call asyncrun#quickfix_toggle(6)<CR>
+"Autorun make rule in current directory
+nnoremap <silent> <F9> :AsyncRun make<CR>
+"Async run command line
+nnoremap <Leader>r :AsyncRun 
 
-"---------- EASYMOTION SETTINGS ----------
-" Easymotion key binding
-map <Leader> <Plug>(easymotion-prefix)
+let g:asyncrun_open = 6
 
-"---------GIT SETTINGS--------------
-map <Leader>g :Gblame<CR>
-hi clear SignColumn
-let g:airline#extensions#hunks#non_zero_only = 1
+"---------- TAGS AND CSCOPE SETTINGS -----------
+set tags=./.tags;,.tags
+set cscopeprg=gtags-cscope
+
+"---------- GUTENTAGS SETTINGS ----------
+"Enable universal-ctags ang gtags-cscope support
+let g:gutentags_modules = ['ctags', 'gtags_cscope']
+" Search rule for root directory
+let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
+" Tagfile name
+let g:gutentags_ctags_tagfile = '.tags'
+let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+"let g:gutentags_ctags_extra_args += ['--output-format=e-ctags']
+
+" Tagfile directory name
+let g:gutentags_cache_dir = expand('~/.cache/tags')
+if !isdirectory(expand('~/.cache/tags'))
+   silent! call mkdir(expand('~/.cache/tags'), 'p')
+endif
+
+let g:gutentags_auto_add_gtags_cscope = 1
+
+" Debug options
+"let g:gutentags_trace = 1
+let g:gutentags_define_advanced_commands = 1
+
+"---------- STATUSLINE SETTINGS - LIGHTLINE ----------
+let g:lightline = {
+	\ 'colorscheme': 'gruvbox',
+	\ 'active': {
+	\   'left': [ [ 'mode', 'paste' ],
+	\             [ 'readonly', 'filename', 'modified', 'gitbranch' ] ],
+	\ },
+	\ 'tabline': {
+	\   'left': [ [ 'bufferinfo' ],
+	\             [ 'separator' ],
+	\             [ 'bufferbefore', 'buffercurrent', 'bufferafter' ], ],
+	\   'right': [ [ 'close' ], ],
+	\ },
+	\ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
+	\ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3" },
+	\ 'component_expand': {
+	\   'buffercurrent': 'lightline#buffer#buffercurrent',
+	\   'bufferbefore': 'lightline#buffer#bufferbefore',
+	\   'bufferafter': 'lightline#buffer#bufferafter',
+	\ },
+	\ 'component_type': {
+	\   'buffercurrent': 'tabsel',
+	\   'bufferbefore': 'raw',
+	\   'bufferafter': 'raw',
+	\ },
+	\ 'component_function': {
+	\   'gitbranch': 'fugitive#head',
+	\   'bufferinfo': 'lightline#buffer#bufferinfo',
+	\ },
+	\ 'component': {
+	\   'separator': '',
+	\ },
+\ }
+
+" lightline-buffer ui settings
+" replace these symbols with ascii characters if your environment does not support unicode
+let g:lightline_buffer_logo = '◕ '
+let g:lightline_buffer_readonly_icon = ''
+let g:lightline_buffer_modified_icon = '✭'
+let g:lightline_buffer_git_icon = ' '
+let g:lightline_buffer_ellipsis_icon = '..'
+let g:lightline_buffer_expand_left_icon = '◀ '
+let g:lightline_buffer_expand_right_icon = ' ▶'
+let g:lightline_buffer_active_buffer_left_icon = ''
+let g:lightline_buffer_active_buffer_right_icon = ''
+let g:lightline_buffer_separator_icon = '  '
+
+" enable devicons, only support utf-8
+" require <https://github.com/ryanoasis/vim-devicons>
+let g:lightline_buffer_enable_devicons = 1
+" lightline-buffer function settings
+let g:lightline_buffer_show_bufnr = 1
+" :help filename-modifiers
+let g:lightline_buffer_fname_mod = ':t'
+" hide buffer list
+let g:lightline_buffer_excludes = ['vimfiler']
+" max file name length
+let g:lightline_buffer_maxflen = 30
+" max file extension length
+let g:lightline_buffer_maxfextlen = 3
+" min file name length
+let g:lightline_buffer_minflen = 16
+" min file extension length
+let g:lightline_buffer_minfextlen = 3
+" reserve length for other component (e.g. info, close)
+let g:lightline_buffer_reservelen = 20
+ 
+"---------- YCM SETTINGS -----------
+" CTRL + F* keymaps (<C-s> for auto complete, <C-y> for select)
+" Preserve C-y for apply key
+noremap <F7> :YcmGenerateConfig<CR>
+noremap <C-y> <NOP>
+let g:ycm_key_invoke_completion = '<C-s>'
+let g:ycm_key_list_select_completion = [ '<TAB>', 'Down', 'Enter' ]
+"let g:ycm_extra_conf_globlist = ['~/ycm_preset/*','!~/*']
+let g:ycm_global_ycm_extra_conf='~/.vim/ycm_presets/c/.ycm_extra_conf.py'
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_add_preview_to_completeopt = 0
+let g:ycm_show_diagnostics_ui = 0
+let g:ycm_server_log_level = 'info'
+let g:ycm_min_num_identifier_candidate_chars = 2
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
+let g:ycm_complete_in_strings=1
+set completeopt=menu,menuone
+let g:ycm_semantic_triggers =  {
+	\ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
+	\ 'cs,lua,javascript': ['re!\w{2}'],
+\ }
+
+"---------- ALE SETTINGS -----------
+noremap <F6> :ALELint<CR>
+nmap <silent> <leader>an :ALENext<CR>
+nmap <silent> <leader>ap :ALEPrevious<CR>
+let g:ale_linters_explicit = 1
+"let g:ale_completion_delay = 1000
+let g:ale_echo_delay = 100
+let g:ale_echo_msg_format = '[%linter%] %code: %%s'
+let g:ale_lint_delay = 1000
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_save = 0
+let g:airline#extensions#ale#enabled = 1
+
+let g:ale_c_gcc_options = '-Wall -O2 -std=c99'
+let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++14'
+let g:ale_c_cppcheck_options = ''
+let g:ale_cpp_cppcheck_options = ''
+
+let g:ale_linters = {
+	\ 'sh': ['shell'],
+	\ 'c': ['gcc'],
+	\ 'cpp': ['gcc'],
+\}
+
+"---------- ULTISNIPS SETTINGS -----------
+"" Alt keymaps
+let g:UltiSnipsExpandTrigger="<M-x>"
+let g:UltiSnipsJumpForwardTrigger="<M-z>"
+let g:UltiSnipsJumpBackwardTrigger="<M-c>"
+let g:snips_author="ShihChieh Lin"
+let g:snips_mail="shihchieh.lin@augentix.com"
+let g:snips_company="Augentix Inc."
+
+" If you want :UltiSnipsEdit to split your window.
+nnoremap <F10> :UltiSnipsEdit<CR>
+let g:UltiSnipsEditSplit="vertical"
+
+"---------- ECHODOC SETTINGS -----------
+let g:echodoc_enable_at_startup=1
 
 "----------DELIMITEMATE SETTINGS-----------------
 let delimitMate_expand_cr = 1
@@ -174,78 +380,63 @@ augroup mydelimitMate
     au FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
 augroup END
 
-"-----------TMUX SETTINGS--------------
-let g:tmux_navigator_save_on_switch = 2
+"---------- AUTOFORMAT SETTINGS -----------
+noremap <F3> :Autoformat<CR>:w<CR>
+let g:formatterpath = [ '~/bin' ]
+" Disable vim indent preference
+let g:autoformat_autoindent = 0
+let g:autoformat_retab = 0
+let g:autoformat_remove_trailing_spaces = 0
+let g:formatdef_augentix_c= '"clang-format-3.9"'
+let g:formatters_c = ['augentix_c']
+"let g:autoformat_verbosemode=1
 
-"---------- SOURCE EXPLORER SETTING ----------
-" // The switch of the Source Explorer
-nnoremap <silent> <F4> :SrcExplToggle<CR>
-" // Set the height of Source Explorer window
-let g:SrcExpl_winHeight = 8
-" // Set ms for refreshing the Source Explorer
-let g:SrcExpl_refreshTime = 1000
-" // Set "Enter" key to jump into the exact definition context
-let g:SrcExpl_jumpKey = "<ENTER>"
-" // Set "Space" key for back from the definition context
-let g:SrcExpl_gobackKey = "<SPACE>"
-" // In order to Avoid conflicts, the Source Explorer should know what plugins
-" // are using buffers. And you need add their bufname into the list below
-" // according to the command ":buffers!"
-"let g:SrcExpl_pluginList = [
-""    \ "__Tag_List__",
-""    \ "__Tagbar__.1",
-""    \ "Source_Explorer",
-""    \ "NERD_tree_1",
-""    \ ]
-" // Enable/Disable the local definition searching, and note that this is not
-" // guaranteed to work, the Source Explorer doesn't check the syntax for now.
-" // It only searches for a match with the keyword according to command 'gd'
-let g:SrcExpl_searchLocalDef = 1
-" // Do not let the Source Explorer update the tags file when opening
-let g:SrcExpl_isUpdateTags = 0
-" // Use 'Exuberant Ctags' with '--sort=foldcase -R .' or '-L cscope.files' to
-" //  create/update a tags file
-let g:SrcExpl_updateTagsCmd = "ctags --sort=foldcase -R ."
-" // Set "<F11>" key for updating the tags file artificially
-let g:SrcExpl_updateTagsKey = "<F11>"
+"au BufWrite *.c,*.h :Autoformat
 
-nnoremap <silent> <F5> :NERDTreeToggle<CR>:TagbarToggle<CR>:SrcExplToggle<CR>
-" tags in parent diractories
-" set tags=./tags,tags;$HOME
+"---------- VIM-TMUX-NAVIGATOR SETTINGS -----------
+let g:tmux_navigator_no_mappings = 1
+nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
+nnoremap <silent> <C-\> :TmuxNavigatePrevious<cr>
 
-"---------- KEY BINDINGS ----------
-imap <C-k> <up>
-imap <C-j> <down>
-imap <C-h> <left>
-imap <C-l> <right>
+"---------- GUI SETTINGS -----------
+set winaltkeys=no
 
-nnoremap <C-k> <C-b>
-nnoremap <C-j> <C-f>
-nmap <silent> <C-Up> :wincmd k<CR>
-nmap <silent> <C-Down> :wincmd j<CR>
-nmap <silent> <C-Left> :wincmd h<CR>
-nmap <silent> <C-Right> :wincmd l<CR>
-" Tabline in airline could display buffers
-nnoremap <C-h> :bp<CR>
-nnoremap <C-l> :bn<CR>
-nnoremap <C-b> :bd<CR>
-nnoremap <C-n> :tabnew<CR>
-"nnoremap <C-h> :tabp<CR>
-"nnoremap <C-l> :tabn<CR>
-nnoremap <silent> <C-c> :nohl<CR>
-nnoremap wgf <C-w>gf
-nnoremap ; :
-vmap ; :
-nnoremap <tab> v>
-nnoremap <s-tab> v<
-vmap <tab> >gv
-vmap <s-tab> <gv
+"---------- MISC SETTINGS -----------
 
-nnoremap * *<c-o>
-nnoremap n nzzzv
-nnoremap N Nzzzv
-nnoremap H ^
-nnoremap L $
+" Override highlight trailing spaces
+highlight ExtraWhitespace ctermbg=darkblue guibg=darkblue ctermfg=white
+call matchadd('ExtraWhitespace', '\s\+$')
 
-"---------- MISC ----------
-set t_RV= " Supress garbage chars received from terminal
+" Override TODO/FIXME highlight
+highlight cTodo cterm=bold gui=bold ctermbg=darkblue guibg=darkblue ctermfg=white
+syntax match cTodo contained "\<\(TODO\|FIXME\):"
+
+" Highlight column 81
+let &colorcolumn=join(range(121,999),",")
+
+" C style toggler
+nnoremap <F4> :call ToggleTabWidth()<CR>
+function ToggleTabWidth()
+	if &tabstop == 8
+		set tabstop=4
+	else
+		set tabstop=8
+	endif
+	retab
+endfunction
+
+" Buffer window diff
+nnoremap <Leader><Leader>d :call ToggleWinDiff()<CR>
+let s:windiff_toggled = 0
+function! ToggleWinDiff()
+	if s:windiff_toggled == 0
+		let s:windiff_toggled = 1
+		windo diffthis
+	else
+		let s:windiff_toggled = 0
+		windo diffoff
+	endif
+endfunction
